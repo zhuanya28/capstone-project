@@ -23,20 +23,24 @@
       "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js",
         "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
+
       }
     }
   </script>
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { FontLoader } from 'three/addons/loaders/FontLoader.js';   
+    import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+
     window.THREE = THREE;
     window.OrbitControls = OrbitControls;
   </script>
 
   <!-- import your scripts here! -->
-  <script defer src="js/script-three.js"></script>
-  <script defer src="js/script-p5.js"></script>
-  <script defer src="js/main.js"></script>
+  <!-- <script defer src="js/script-three.js"></script>
+  <script defer src="js/script-p5.js"></script> -->
+  <script defer src="js/index.js"></script>
 </head>
 
 <body>
