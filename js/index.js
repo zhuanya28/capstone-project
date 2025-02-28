@@ -57,30 +57,50 @@ class OpeningStage extends StageBase {
         this.light = new THREE.DirectionalLight(0xffffff, 1);
         this.light.position.set(5, 5, 5);
         this.scene.add(this.light);
-        scene.background = new THREE.Color(0xffffff);
         // Add a rotating light
+
+        // Add a light that rotates
+        const rotatingLight = new THREE.PointLight(0xffffff, 1, 100);
+        rotatingLight.position.set(10, 10, 10);
+        this.scene.add(rotatingLight);
+
+        // Animation for rotating light
+        const rotateLight = () => {
+            requestAnimationFrame(rotateLight);
+            rotatingLight.position.x = 10 * Math.cos(Date.now() * 0.001);
+            rotatingLight.position.z = 10 * Math.sin(Date.now() * 0.001);
+        };
+        rotateLight();
         const light = new THREE.DirectionalLight(0xffffff, 1);
-        light.position.set(0, 10, 0);
-        light.castShadow = true;
+        light.position.set(5, 5, 5);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0x404040));
 
         const fontLoader = new FontLoader();
+
+
+        const cubeTexture = new THREE.CubeTextureLoader()
+            .setPath('assets/')
+            .load(['dark-s_px.jpg', 'dark-s_nx.jpg', 'dark-s_py.jpg', 'dark-s_ny.jpg', 'dark-s_pz.jpg', 'dark-s_nz.jpg']);
+        scene.background = cubeTexture;
         fontLoader.load('assets/futuristic-armour.json', function (futuristicFont) {
             const geometry = new TextGeometry('Welcome back', {
                 font: futuristicFont,
                 size: 5,
-                height: 1,
-                // curveSegments: 10,
-                // bevelEnabled: false,
-                // bevelOffset: 0,
-                // bevelSegments: 1,
-                // bevelSize: 0.3,
-                // bevelThickness: 1
+                height: 0.5,
+                bevelEnabled: true,
+                bevelSize: 0.1,
+                bevelThickness: 0.2
             });
-            const materials = [
-                new THREE.MeshPhongMaterial({ color: 0xff6600 }), // front
-                new THREE.MeshPhongMaterial({ color: 0x0000ff }) // side
-            ];
-            const textMesh1 = new THREE.Mesh(geometry, materials);
+            const textMaterial = new THREE.MeshPhysicalMaterial({
+                envMap: cubeTexture, // Same cube texture used for reflections
+                color: 0xffffff,     // Base color
+                metalness: 0.2,     // 0-1 (non-metal to full metal)
+                roughness: 0.1,      // 0-1 (smooth to rough)
+                transparent: true,
+                opacity: 0.9
+            });
+            const textMesh1 = new THREE.Mesh(geometry, textMaterial);
             textMesh1.castShadow = true
             textMesh1.position.y += 10
             textMesh1.position.x -= 6
@@ -103,6 +123,8 @@ class OpeningStage extends StageBase {
     exit() {
         super.exit();
         this.scene.remove(this.light);
+        this.scene.remove(this.mesh);
+        this.scene.remove(this.textMesh1);
     }
 }
 
@@ -150,7 +172,7 @@ function initThree() {
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 50; // Adjusted for better visibility
 
-    renderer = new THREE.WebGLRenderer();
+    renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById("container-three").appendChild(renderer.domElement);
     renderer.shadowMap.enabled = true;
