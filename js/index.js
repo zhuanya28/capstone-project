@@ -60,15 +60,15 @@ class OpeningStage extends StageBase {
         // Add a rotating light
 
         // Add a light that rotates
-        const rotatingLight = new THREE.PointLight(0xffffff, 1, 100);
-        rotatingLight.position.set(10, 10, 10);
+        const rotatingLight = new THREE.PointLight(0xffffff, 1, 1000);
+        rotatingLight.position.set(0, 0, 0);
         this.scene.add(rotatingLight);
 
         // Animation for rotating light
         const rotateLight = () => {
             requestAnimationFrame(rotateLight);
-            rotatingLight.position.x = 10 * Math.cos(Date.now() * 0.001);
-            rotatingLight.position.z = 10 * Math.sin(Date.now() * 0.001);
+            rotatingLight.position.x = 200 * Math.cos(Date.now() * 0.001);
+            rotatingLight.position.z = 200 * Math.sin(Date.now() * 0.001);
         };
         rotateLight();
         const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -95,7 +95,7 @@ class OpeningStage extends StageBase {
             const textMaterial = new THREE.MeshPhysicalMaterial({
                 envMap: cubeTexture, // Same cube texture used for reflections
                 color: 0xffffff,     // Base color
-                metalness: 0.2,     // 0-1 (non-metal to full metal)
+                metalness: 0.5,     // 0-1 (non-metal to full metal)
                 roughness: 0.1,      // 0-1 (smooth to rough)
                 transparent: true,
                 opacity: 0.9
@@ -125,6 +125,10 @@ class OpeningStage extends StageBase {
         this.scene.remove(this.light);
         this.scene.remove(this.mesh);
         this.scene.remove(this.textMesh1);
+        // this.scene.remove(this.textMesh1);
+        // if (this.textMesh1.geometry) this.textMesh1.geometry.dispose();
+        // if (this.textMesh1.material) this.textMesh1.material.dispose();
+        // this.textMesh1 = null;
     }
 }
 
@@ -144,6 +148,11 @@ class TransitionStage extends StageBase {
         plane.receiveShadow = true;
         scene.add(plane);
 
+    }
+    exit() {
+        super.exit();
+        if (this.plane) this.scene.remove(this.plane);
+        this.scene.remove(this.plane);
     }
 }
 
