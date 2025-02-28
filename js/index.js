@@ -54,13 +54,51 @@ class StageBase {
 
 class OpeningStage extends StageBase {
     enter() {
-        this.mesh = getBox();
-        this.mesh.position.set(0, 0, 0);
-        this.scene.add(this.mesh);
-        // Add required lighting
         this.light = new THREE.DirectionalLight(0xffffff, 1);
         this.light.position.set(5, 5, 5);
         this.scene.add(this.light);
+        scene.background = new THREE.Color(0xffffff);
+        // Add a rotating light
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(0, 10, 0);
+        light.castShadow = true;
+
+        const fontLoader = new FontLoader();
+        fontLoader.load('assets/futuristic-armour.json', function (futuristicFont) {
+            const geometry = new TextGeometry('Welcome back', {
+                font: futuristicFont,
+                size: 5,
+                height: 1,
+                // curveSegments: 10,
+                // bevelEnabled: false,
+                // bevelOffset: 0,
+                // bevelSegments: 1,
+                // bevelSize: 0.3,
+                // bevelThickness: 1
+            });
+            const materials = [
+                new THREE.MeshPhongMaterial({ color: 0xff6600 }), // front
+                new THREE.MeshPhongMaterial({ color: 0x0000ff }) // side
+            ];
+            const textMesh1 = new THREE.Mesh(geometry, materials);
+            textMesh1.castShadow = true
+            textMesh1.position.y += 10
+            textMesh1.position.x -= 6
+            textMesh1.rotation.y = 0.25
+            scene.add(textMesh1)
+        },
+
+            // onProgress callback
+            function (xhr) {
+                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+            },
+
+            // onError callback
+            function (err) {
+                console.log('An error happened');
+            }
+        );
+
     }
     exit() {
         super.exit();
@@ -78,6 +116,11 @@ class TransitionStage extends StageBase {
         this.light = new THREE.DirectionalLight(0xffffff, 1);
         this.light.position.set(5, 5, 5);
         this.scene.add(this.light);
+
+        const plane = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshPhongMaterial({ color: 0x808080 }));
+        plane.rotation.x = -Math.PI / 2;
+        plane.receiveShadow = true;
+        scene.add(plane);
 
     }
 }
@@ -110,6 +153,11 @@ function initThree() {
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById("container-three").appendChild(renderer.domElement);
+    renderer.shadowMap.enabled = true;
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    camera.position.set(0, 20, 100);
+    controls.update();
 
     // Initialize stage system
     experienceManager = new ExperienceManager(scene);

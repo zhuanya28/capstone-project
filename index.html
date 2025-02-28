@@ -21,8 +21,8 @@
   <script type="importmap">
     {
       "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
+        "three": "https://cdn.jsdelivr.net/npm/three@0.174.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/"
 
       }
     }
@@ -30,17 +30,23 @@
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-    import { FontLoader } from 'three/addons/loaders/FontLoader.js';   
+    import { FontLoader } from 'three/addons/loaders/FontLoader.js';
     import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     window.THREE = THREE;
     window.OrbitControls = OrbitControls;
+    window.FontLoader = FontLoader;
+    window.TextGeometry = TextGeometry;
+    window.GLTFLoader = GLTFLoader;
   </script>
 
   <!-- import your scripts here! -->
   <!-- <script defer src="js/script-three.js"></script>
   <script defer src="js/script-p5.js"></script> -->
   <script defer src="js/index.js"></script>
+
+
+
 </head>
 
 <body>
